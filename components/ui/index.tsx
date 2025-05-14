@@ -1,7 +1,9 @@
 export { Box } from './box';
-export { Button, ButtonText } from './button';
+export { Button, ButtonIcon, ButtonText } from './button';
 export { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from './checkbox';
 export { HStack } from './hstack';
-export { CheckIcon, Icon, MenuIcon, SettingsIcon } from './icon';
+export { AddIcon, CheckIcon, Icon, MenuIcon, RemoveIcon, SettingsIcon } from './icon';
+export { Input, InputField, InputIcon } from './input';
+export { Spinner } from './spinner';
 export { Text } from './text';
 export { VStack } from './vstack';

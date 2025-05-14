@@ -1,6 +1,8 @@
 import {
+    AddIcon,
     Box,
     Button,
+    ButtonIcon,
     ButtonText,
     Checkbox,
     CheckboxIcon,
@@ -8,6 +10,10 @@ import {
     CheckboxLabel,
     CheckIcon,
     HStack,
+    Input,
+    InputField,
+    RemoveIcon,
+    Spinner,
     Text,
     VStack,
 } from '@/components/ui';
@@ -15,7 +21,8 @@ import { groceryApi } from '@/services/api';
 import { GroceryItem } from '@/types/grocery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, TextInput } from 'react-native';
+import { StyleSheet } from 'react-native';
+import colors from 'tailwindcss/colors';
 
 const styles = StyleSheet.create({
     container: {
@@ -26,6 +33,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    input: {
+        flex: 1,
+        height: 40,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
     },
 });
 
@@ -75,10 +89,24 @@ export default function MyListScreen() {
         });
     };
 
+    const handleAddAmount = (item: GroceryItem) => {
+        toggleMutation.mutate({
+            id: item.id,
+            updates: { amount: item.amount + 1 },
+        });
+    };
+
+    const handleRemoveAmount = (item: GroceryItem) => {
+        toggleMutation.mutate({
+            id: item.id,
+            updates: { amount: item.amount - 1 },
+        });
+    };
+
     if (isLoading) {
         return (
             <Box style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#0000ff" />
+                <Spinner size="large" color={colors.blue[500]} />
             </Box>
         );
     }
@@ -94,21 +122,14 @@ export default function MyListScreen() {
     return (
         <Box className="bg-white dark:bg-black flex-1" style={styles.container}>
             <VStack space="md">
-                <HStack space="sm" alignItems="center">
-                    <TextInput
-                        style={{
-                            flex: 1,
-                            height: 40,
-                            borderWidth: 1,
-                            borderColor: '#ccc',
-                            borderRadius: 8,
-                            paddingHorizontal: 8,
-                        }}
-                        value={newItem}
-                        onChangeText={setNewItem}
-                        placeholder="Add new item"
-                        onSubmitEditing={handleAddItem}
-                    />
+                <HStack space="sm" alignItems="center" className="mb-4">
+                    <Input style={styles.input} variant="outline" size="md">
+                        <InputField
+                            value={newItem}
+                            onChangeText={setNewItem}
+                            placeholder="Enter title..."
+                        />
+                    </Input>
 
                     <Button
                         size="md"
@@ -128,7 +149,7 @@ export default function MyListScreen() {
                             space="md"
                             style={{ justifyContent: 'space-between' }}
                         >
-                            <HStack space="sm" alignItems="center">
+                            <HStack space="md">
                                 <Checkbox
                                     value={item.bought ? 'true' : 'false'}
                                     onChange={() => handleToggleItem(item)}
@@ -144,7 +165,25 @@ export default function MyListScreen() {
                                     </CheckboxLabel>
                                 </Checkbox>
                             </HStack>
-                            <Text>x{item.amount}</Text>
+                            <HStack>
+                                <Button
+                                    size="xs"
+                                    variant="outline"
+                                    className="rounded-full p-3.5"
+                                    onPress={() => handleAddAmount(item)}
+                                >
+                                    <ButtonIcon as={AddIcon} />
+                                </Button>
+                                <Text className="text-lg px-2">{item.amount}</Text>
+                                <Button
+                                    size="xs"
+                                    variant="outline"
+                                    className="rounded-full p-3.5"
+                                    onPress={() => handleRemoveAmount(item)}
+                                >
+                                    <ButtonIcon as={RemoveIcon} />
+                                </Button>
+                            </HStack>
                         </HStack>
                     ))}
                 </VStack>

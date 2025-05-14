@@ -1,28 +1,36 @@
 {
-    "groceries": [
-        {
-            "id": "1",
-            "title": "Bread",
-            "amount": 1,
-            "bought": false,
-            "createdAt": "2025-05-14T00:00:00.000Z",
-            "updatedAt": "2025-05-14T10:49:32.105Z"
-        },
-        {
-            "id": "2",
-            "title": "Milk",
-            "amount": 1,
-            "bought": true,
-            "createdAt": "2025-05-14T00:00:00.000Z",
-            "updatedAt": "2025-05-14T14:30:37.074Z"
-        },
-        {
-            "id": "49ef",
-            "title": "Potatoes",
-            "amount": 1,
-            "bought": false,
-            "createdAt": "2025-05-14T10:50:12.705Z",
-            "updatedAt": "2025-05-14T14:42:54.706Z"
-        }
-    ]
+  "groceries": [
+    {
+      "id": "1",
+      "title": "Bread",
+      "amount": 4,
+      "bought": false,
+      "createdAt": "2025-05-14T00:00:00.000Z",
+      "updatedAt": "2025-05-14T15:17:15.210Z"
+    },
+    {
+      "id": "2",
+      "title": "Milk",
+      "amount": 4,
+      "bought": true,
+      "createdAt": "2025-05-14T00:00:00.000Z",
+      "updatedAt": "2025-05-14T15:17:31.266Z"
+    },
+    {
+      "id": "49ef",
+      "title": "Potatoes",
+      "amount": 0,
+      "bought": true,
+      "createdAt": "2025-05-14T10:50:12.705Z",
+      "updatedAt": "2025-05-14T15:17:34.640Z"
+    },
+    {
+      "id": "6689",
+      "title": "Test",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-14T14:56:22.034Z",
+      "updatedAt": "2025-05-14T14:56:22.034Z"
+    }
+  ]
 }
