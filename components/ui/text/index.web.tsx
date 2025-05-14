@@ -1,13 +1,10 @@
 import React from 'react';
-
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { Text as RNText } from 'react-native';
 import { textStyle } from './styles';
 
-type ITextProps = React.ComponentProps<typeof RNText> &
-  VariantProps<typeof textStyle>;
+type ITextProps = React.ComponentProps<'span'> & VariantProps<typeof textStyle>;
 
-const Text = React.forwardRef<React.ComponentRef<typeof RNText>, ITextProps>(
+const Text = React.forwardRef<React.ComponentRef<'span'>, ITextProps>(
   function Text(
     {
       className,
@@ -20,11 +17,11 @@ const Text = React.forwardRef<React.ComponentRef<typeof RNText>, ITextProps>(
       italic,
       highlight,
       ...props
-    },
+    }: { className?: string } & ITextProps,
     ref
   ) {
     return (
-      <RNText
+      <span
         className={textStyle({
           isTruncated,
           bold,

@@ -1,20 +1,23 @@
-import { Box } from '@/components/ui/box';
-import { Button } from '@/components/ui/button';
-import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from '@/components/ui/checkbox';
-import { HStack } from '@/components/ui/hstack';
-import { CheckIcon } from '@/components/ui/icon';
-import { VStack } from '@/components/ui/vstack';
+import {
+    Box,
+    Button,
+    ButtonText,
+    Checkbox,
+    CheckboxIcon,
+    CheckboxIndicator,
+    CheckboxLabel,
+    CheckIcon,
+    HStack,
+    Text,
+    VStack,
+} from '@/components/ui';
 import { groceryApi } from '@/services/api';
 import { GroceryItem } from '@/types/grocery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { ActivityIndicator, SafeAreaView, StyleSheet, Text, TextInput } from 'react-native';
+import { ActivityIndicator, StyleSheet, TextInput } from 'react-native';
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
     container: {
         flex: 1,
         padding: 16,
@@ -74,89 +77,78 @@ export default function MyListScreen() {
 
     if (isLoading) {
         return (
-            <SafeAreaView style={styles.safeArea}>
-                <Box style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#0000ff" />
-                </Box>
-            </SafeAreaView>
+            <Box style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </Box>
         );
     }
 
     if (error) {
         return (
-            <SafeAreaView style={styles.safeArea}>
-                <Box style={styles.loadingContainer}>
-                    <Text>Error loading groceries</Text>
-                </Box>
-            </SafeAreaView>
+            <Box style={styles.loadingContainer}>
+                <Text>Error loading groceries</Text>
+            </Box>
         );
     }
 
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <Box style={styles.container}>
-                <VStack space="md">
-                    <HStack space="sm" alignItems="center">
-                        <TextInput
-                            style={{
-                                flex: 1,
-                                height: 40,
-                                borderWidth: 1,
-                                borderColor: '#ccc',
-                                borderRadius: 8,
-                                paddingHorizontal: 8,
-                            }}
-                            value={newItem}
-                            onChangeText={setNewItem}
-                            placeholder="Add new item"
-                            onSubmitEditing={handleAddItem}
-                        />
-                        <Button
-                            onPress={handleAddItem}
-                            disabled={!newItem.trim() || addMutation.isPending}
-                        >
-                            <Text>Add</Text>
-                        </Button>
-                    </HStack>
+        <Box className="bg-white dark:bg-black flex-1" style={styles.container}>
+            <VStack space="md">
+                <HStack space="sm" alignItems="center">
+                    <TextInput
+                        style={{
+                            flex: 1,
+                            height: 40,
+                            borderWidth: 1,
+                            borderColor: '#ccc',
+                            borderRadius: 8,
+                            paddingHorizontal: 8,
+                        }}
+                        value={newItem}
+                        onChangeText={setNewItem}
+                        placeholder="Add new item"
+                        onSubmitEditing={handleAddItem}
+                    />
 
-                    <VStack space="sm">
-                        {items.map((item) => (
-                            <HStack
-                                key={item.id}
-                                space="sm"
-                                alignItems="center"
-                                justifyContent="space-between"
-                            >
-                                <HStack space="sm" alignItems="center">
-                                    <Checkbox
-                                        value={item.bought ? 'true' : 'false'}
-                                        onChange={() => handleToggleItem(item)}
-                                        size="md"
-                                        isInvalid={false}
-                                        isDisabled={false}
-                                    >
-                                        <CheckboxIndicator>
-                                            <CheckboxIcon as={CheckIcon} />
-                                        </CheckboxIndicator>
-                                        <CheckboxLabel>
-                                            <Text
-                                                style={{
-                                                    textDecorationLine: item.bought
-                                                        ? 'line-through'
-                                                        : 'none',
-                                                }}
-                                            >
-                                                {item.title}
-                                            </Text>
-                                        </CheckboxLabel>
-                                    </Checkbox>
-                                </HStack>
-                                <Text>x{item.amount}</Text>
+                    <Button
+                        size="md"
+                        variant="outline"
+                        action="primary"
+                        onPress={handleAddItem}
+                        disabled={!newItem.trim() || addMutation.isPending}
+                    >
+                        <ButtonText>Add item</ButtonText>
+                    </Button>
+                </HStack>
+
+                <VStack space="md">
+                    {items.map((item) => (
+                        <HStack
+                            key={item.id}
+                            space="md"
+                            style={{ justifyContent: 'space-between' }}
+                        >
+                            <HStack space="sm" alignItems="center">
+                                <Checkbox
+                                    value={item.bought ? 'true' : 'false'}
+                                    onChange={() => handleToggleItem(item)}
+                                    size="lg"
+                                    isInvalid={false}
+                                    isDisabled={false}
+                                >
+                                    <CheckboxIndicator>
+                                        <CheckboxIcon as={CheckIcon} />
+                                    </CheckboxIndicator>
+                                    <CheckboxLabel>
+                                        <Text strikeThrough={item.bought}>{item.title}</Text>
+                                    </CheckboxLabel>
+                                </Checkbox>
                             </HStack>
-                        ))}
-                    </VStack>
+                            <Text>x{item.amount}</Text>
+                        </HStack>
+                    ))}
                 </VStack>
-            </Box>
-        </SafeAreaView>
+            </VStack>
+        </Box>
     );
 }
