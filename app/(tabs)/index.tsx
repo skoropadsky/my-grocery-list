@@ -180,7 +180,7 @@ export default function MyListScreen() {
                             space="lg"
                             key={item.id}
                             className={`items-center justify-between p-2 rounded-md ${
-                                itemFocused?.id === item.id ? 'bg-gray-100' : ''
+                                itemFocused?.id === item.id ? 'bg-gray-100 dark:bg-gray-800' : ''
                             }`}
                         >
                             <HStack space="md" className="flex-1 items-center">

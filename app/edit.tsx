@@ -79,7 +79,9 @@ export default function EditScreen() {
                 <Button
                     size="lg"
                     onPress={handleSave}
-                    disabled={!editedTitle.trim() || updateMutation.isPending}
+                    isDisabled={
+                        !editedTitle.trim() || !editedAmount.trim() || updateMutation.isPending
+                    }
                 >
                     <ButtonText>Save</ButtonText>
                 </Button>

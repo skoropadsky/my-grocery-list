@@ -13,5 +13,6 @@ export { HStack } from './hstack';
 export { AddIcon, CheckIcon, CloseIcon, Icon, MenuIcon, RemoveIcon, SettingsIcon } from './icon';
 export { Input, InputField, InputIcon } from './input';
 export { Spinner } from './spinner';
+export { Switch } from './switch';
 export { Text } from './text';
 export { VStack } from './vstack';
