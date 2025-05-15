@@ -19,10 +19,13 @@ export default function TabLayout() {
                 tabBarStyle: Platform.select({
                     ios: {
                         position: 'absolute',
-                        backgroundColor: isDark ? colors.gray[950] : colors.white,
+                        backgroundColor: isDark ? colors.black[950] : colors.white,
+                        height: 60,
                     },
                     default: {
-                        backgroundColor: isDark ? colors.gray[950] : colors.white,
+                        backgroundColor: isDark ? colors.black[950] : colors.white,
+                        paddingBottom: 0,
+                        height: 60,
                     },
                 }),
             }}
@@ -38,7 +41,7 @@ export default function TabLayout() {
                 name="settings"
                 options={{
                     title: 'Settings',
-                    tabBarIcon: ({ color }) => <SettingsIcon color={color} />,
+                    tabBarIcon: ({ color }) => <SettingsIcon color={color} fill="transparent" />,
                 }}
             />
         </Tabs>
