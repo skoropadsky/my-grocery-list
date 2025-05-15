@@ -4,33 +4,33 @@
       "id": "1",
       "title": "Bread",
       "amount": 4,
-      "bought": false,
+      "bought": true,
       "createdAt": "2025-05-14T00:00:00.000Z",
-      "updatedAt": "2025-05-14T15:17:15.210Z"
+      "updatedAt": "2025-05-15T12:48:39.372Z"
     },
     {
       "id": "2",
-      "title": "Milk",
-      "amount": 4,
+      "title": "Milk Simple",
+      "amount": 90,
       "bought": true,
       "createdAt": "2025-05-14T00:00:00.000Z",
-      "updatedAt": "2025-05-14T15:17:31.266Z"
-    },
-    {
-      "id": "49ef",
-      "title": "Potatoes",
-      "amount": 0,
-      "bought": true,
-      "createdAt": "2025-05-14T10:50:12.705Z",
-      "updatedAt": "2025-05-14T15:17:34.640Z"
+      "updatedAt": "2025-05-15T13:43:55.209Z"
     },
     {
       "id": "6689",
-      "title": "Test",
+      "title": "Tuna 11",
       "amount": 1,
       "bought": false,
       "createdAt": "2025-05-14T14:56:22.034Z",
-      "updatedAt": "2025-05-14T14:56:22.034Z"
+      "updatedAt": "2025-05-15T13:44:03.108Z"
+    },
+    {
+      "id": "c771",
+      "title": "Very long grocery test by lines ablala",
+      "amount": 34,
+      "bought": false,
+      "createdAt": "2025-05-15T11:46:26.268Z",
+      "updatedAt": "2025-05-15T13:37:36.155Z"
     }
   ]
 }

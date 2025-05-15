@@ -1,5 +1,10 @@
 import {
     AddIcon,
+    AlertDialog,
+    AlertDialogBackdrop,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
     Box,
     Button,
     ButtonIcon,
@@ -7,8 +12,8 @@ import {
     Checkbox,
     CheckboxIcon,
     CheckboxIndicator,
-    CheckboxLabel,
     CheckIcon,
+    CloseIcon,
     HStack,
     Input,
     InputField,
@@ -20,8 +25,9 @@ import {
 import { groceryApi } from '@/services/api';
 import { GroceryItem } from '@/types/grocery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import colors from 'tailwindcss/colors';
 
 const styles = StyleSheet.create({
@@ -34,18 +40,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    input: {
-        flex: 1,
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-    },
 });
 
 export default function MyListScreen() {
+    const router = useRouter();
     const [newItem, setNewItem] = useState('');
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<GroceryItem | null>(null);
     const queryClient = useQueryClient();
+    const [itemFocused, setItemFocused] = useState<GroceryItem | null>(null);
 
     const {
         data: items = [],
@@ -67,6 +70,13 @@ export default function MyListScreen() {
     const toggleMutation = useMutation({
         mutationFn: ({ id, updates }: { id: string; updates: Partial<GroceryItem> }) =>
             groceryApi.updateGrocery(id, updates),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['groceries'] });
+        },
+    });
+
+    const removeMutation = useMutation({
+        mutationFn: ({ id }: { id: string }) => groceryApi.deleteGrocery(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['groceries'] });
         },
@@ -97,10 +107,32 @@ export default function MyListScreen() {
     };
 
     const handleRemoveAmount = (item: GroceryItem) => {
-        toggleMutation.mutate({
-            id: item.id,
-            updates: { amount: item.amount - 1 },
-        });
+        if (item.amount > 1) {
+            toggleMutation.mutate({
+                id: item.id,
+                updates: { amount: item.amount - 1 },
+            });
+        }
+    };
+
+    const handleRemoveItem = () => {
+        if (itemToDelete) {
+            removeMutation.mutate({
+                id: itemToDelete.id,
+            });
+            setItemToDelete(null);
+            setShowDeleteDialog(false);
+        }
+    };
+
+    const handleRemoveDialog = (item: GroceryItem | null) => {
+        if (item) {
+            setItemToDelete(item);
+            setShowDeleteDialog(true);
+        } else {
+            setItemToDelete(null);
+            setShowDeleteDialog(false);
+        }
     };
 
     if (isLoading) {
@@ -122,8 +154,8 @@ export default function MyListScreen() {
     return (
         <Box className="bg-white dark:bg-black flex-1" style={styles.container}>
             <VStack space="md">
-                <HStack space="sm" alignItems="center" className="mb-4">
-                    <Input style={styles.input} variant="outline" size="md">
+                <HStack space="sm" className="mb-4 items-center">
+                    <Input className="flex-1" variant="outline" size="md">
                         <InputField
                             value={newItem}
                             onChangeText={setNewItem}
@@ -145,49 +177,104 @@ export default function MyListScreen() {
                 <VStack space="md">
                     {items.map((item) => (
                         <HStack
+                            space="lg"
                             key={item.id}
-                            space="md"
-                            style={{ justifyContent: 'space-between' }}
+                            className={`items-center justify-between p-2 rounded-md ${
+                                itemFocused?.id === item.id ? 'bg-gray-100' : ''
+                            }`}
                         >
-                            <HStack space="md">
+                            <HStack space="md" className="flex-1 items-center">
                                 <Checkbox
-                                    value={item.bought ? 'true' : 'false'}
+                                    value={item.id}
+                                    isChecked={item.bought}
                                     onChange={() => handleToggleItem(item)}
                                     size="lg"
-                                    isInvalid={false}
-                                    isDisabled={false}
                                 >
                                     <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
                                     </CheckboxIndicator>
-                                    <CheckboxLabel>
-                                        <Text strikeThrough={item.bought}>{item.title}</Text>
-                                    </CheckboxLabel>
                                 </Checkbox>
-                            </HStack>
-                            <HStack>
-                                <Button
-                                    size="xs"
-                                    variant="outline"
-                                    className="rounded-full p-3.5"
-                                    onPress={() => handleAddAmount(item)}
+                                <TouchableOpacity
+                                    className="flex-1 p-2"
+                                    onLongPress={() => {
+                                        router.push({
+                                            pathname: '/edit',
+                                            params: {
+                                                id: item.id,
+                                                title: item.title,
+                                                amount: item.amount,
+                                            },
+                                        });
+                                    }}
+                                    onPress={() => setItemFocused(item)}
                                 >
-                                    <ButtonIcon as={AddIcon} />
-                                </Button>
-                                <Text className="text-lg px-2">{item.amount}</Text>
-                                <Button
-                                    size="xs"
-                                    variant="outline"
-                                    className="rounded-full p-3.5"
-                                    onPress={() => handleRemoveAmount(item)}
-                                >
-                                    <ButtonIcon as={RemoveIcon} />
-                                </Button>
+                                    <Text strikeThrough={item.bought}>{item.title}</Text>
+                                </TouchableOpacity>
                             </HStack>
+                            {itemFocused?.id === item.id && (
+                                <HStack className="align-top">
+                                    <Button
+                                        size="xs"
+                                        variant="outline"
+                                        className="rounded-full p-3.5"
+                                        onPress={() => handleAddAmount(item)}
+                                    >
+                                        <ButtonIcon as={AddIcon} />
+                                    </Button>
+                                    <Text className="text-lg px-2 min-w-10 text-center">
+                                        {item.amount}
+                                    </Text>
+                                    <Button
+                                        size="xs"
+                                        variant="outline"
+                                        className="rounded-full p-3.5"
+                                        isDisabled={item.amount <= 1}
+                                        onPress={() => handleRemoveAmount(item)}
+                                    >
+                                        <ButtonIcon as={RemoveIcon} />
+                                    </Button>
+                                    <Button
+                                        size="xs"
+                                        variant="link"
+                                        className="rounded-full px-3 ml-2"
+                                        onPress={() => handleRemoveDialog(item)}
+                                    >
+                                        <ButtonIcon size="md" as={CloseIcon} />
+                                    </Button>
+                                </HStack>
+                            )}
                         </HStack>
                     ))}
                 </VStack>
             </VStack>
+            <AlertDialog
+                isOpen={showDeleteDialog}
+                onClose={() => handleRemoveDialog(null)}
+                size="md"
+            >
+                <AlertDialogBackdrop />
+                <AlertDialogContent>
+                    <AlertDialogHeader className="mb-6">
+                        <Text className="text-typography-950 font-semibold" size="lg">
+                            Delete &quot;{itemToDelete?.title}&quot; from the list?
+                        </Text>
+                    </AlertDialogHeader>
+
+                    <AlertDialogFooter className="">
+                        <Button
+                            variant="outline"
+                            action="secondary"
+                            onPress={() => handleRemoveDialog(null)}
+                            size="lg"
+                        >
+                            <ButtonText>Cancel</ButtonText>
+                        </Button>
+                        <Button size="lg" onPress={() => handleRemoveItem()}>
+                            <ButtonText>Delete</ButtonText>
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Box>
     );
 }
