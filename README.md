@@ -4,16 +4,20 @@
 
 1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 2. Start the app
 
-   ```bash
-   npx expo start
-   ```
+    ```bash
+    npx expo start
+    ```
 
 3. Open app on iOS Simulator or Android Emulator
 
-- Press 'i' for iOS and 'a' for Android
+-   Press 'i' for iOS and 'a' for Android
+
+## Demo usage
+
+![Demo](demo.gif)
