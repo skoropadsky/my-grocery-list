@@ -20,4 +20,4 @@
 
 ## Demo usage
 
-![Demo](demo.gif)
+![Demo](demos/demo.gif)
