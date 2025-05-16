@@ -1,3 +1,84 @@
 {
-  "groceries": []
+  "groceries": [
+    {
+      "id": "0471",
+      "title": "Apples",
+      "amount": 3,
+      "bought": false,
+      "createdAt": "2025-05-16T10:36:48.882Z",
+      "updatedAt": "2025-05-16T10:37:18.925Z"
+    },
+    {
+      "id": "153b",
+      "title": "Potatos",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T10:36:57.497Z",
+      "updatedAt": "2025-05-16T10:36:57.497Z"
+    },
+    {
+      "id": "8f42",
+      "title": "Tuna",
+      "amount": 2,
+      "bought": false,
+      "createdAt": "2025-05-16T10:37:04.887Z",
+      "updatedAt": "2025-05-16T10:37:22.581Z"
+    },
+    {
+      "id": "4a41",
+      "title": "Banana",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T10:59:53.730Z",
+      "updatedAt": "2025-05-16T10:59:53.730Z"
+    },
+    {
+      "id": "acc0",
+      "title": "Milk",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T10:59:58.047Z",
+      "updatedAt": "2025-05-16T10:59:58.047Z"
+    },
+    {
+      "id": "6650",
+      "title": "Bread",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T11:00:06.512Z",
+      "updatedAt": "2025-05-16T11:00:06.512Z"
+    },
+    {
+      "id": "faf5",
+      "title": "Fish",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T11:00:09.373Z",
+      "updatedAt": "2025-05-16T11:00:09.373Z"
+    },
+    {
+      "id": "d57b",
+      "title": "Very long item with many words bla bla bla bla bla bla bla bla bla",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T11:00:29.230Z",
+      "updatedAt": "2025-05-16T11:01:11.341Z"
+    },
+    {
+      "id": "4bd6",
+      "title": "Test",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T11:01:20.889Z",
+      "updatedAt": "2025-05-16T11:01:20.889Z"
+    },
+    {
+      "id": "8a6a",
+      "title": "New itm",
+      "amount": 1,
+      "bought": false,
+      "createdAt": "2025-05-16T11:01:29.597Z",
+      "updatedAt": "2025-05-16T11:01:29.597Z"
+    }
+  ]
 }

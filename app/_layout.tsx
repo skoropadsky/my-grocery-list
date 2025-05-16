@@ -19,7 +19,15 @@ function AppContent() {
                         name="(tabs)"
                         options={{ headerShown: false, title: 'My list' }}
                     />
-                    <Stack.Screen name="edit" options={{ headerShown: true, title: 'Edit item' }} />
+                    <Stack.Screen
+                        name="edit"
+                        options={{
+                            headerShown: true,
+                            title: 'Edit item',
+                            headerStyle: { backgroundColor: 'bg-white dark:bg-black' },
+                            headerTintColor: 'bg-white dark:bg-black',
+                        }}
+                    />
                     <Stack.Screen name="+not-found" />
                 </Stack>
                 <StatusBar style={themeMode === 'dark' ? 'light' : 'dark'} />

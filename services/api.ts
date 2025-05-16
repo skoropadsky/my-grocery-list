@@ -1,5 +1,6 @@
 import { GroceryItem } from '@/types/grocery';
 
+// TODO: Should be loaded from .env file when different environments are added
 const API_URL = 'http://localhost:3000';
 
 export const groceryApi = {
