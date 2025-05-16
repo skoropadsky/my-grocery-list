@@ -18,7 +18,7 @@ import {
 import { groceryApi } from '@/services/api';
 import { GroceryItem as GroceryItemType } from '@/types/grocery';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import colors from 'tailwindcss/colors';
 
@@ -26,11 +26,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingBottom: 134,
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });
 
@@ -40,6 +35,7 @@ export default function MyListScreen() {
     const [itemToDelete, setItemToDelete] = useState<GroceryItemType | null>(null);
     const queryClient = useQueryClient();
     const [itemFocused, setItemFocused] = useState<GroceryItemType | null>(null);
+    const flatListRef = useRef<FlatList>(null);
 
     const {
         data: items = [],
@@ -75,11 +71,20 @@ export default function MyListScreen() {
 
     const handleAddItem = () => {
         if (newItem.trim()) {
-            addMutation.mutate({
-                title: newItem.trim(),
-                amount: 1,
-                bought: false,
-            });
+            addMutation.mutate(
+                {
+                    title: newItem.trim(),
+                    amount: 1,
+                    bought: false,
+                },
+                {
+                    onSuccess: () => {
+                        setTimeout(() => {
+                            flatListRef.current?.scrollToEnd({ animated: true });
+                        }, 100);
+                    },
+                }
+            );
         }
     };
 
@@ -128,7 +133,7 @@ export default function MyListScreen() {
 
     if (isLoading) {
         return (
-            <Box style={styles.loadingContainer}>
+            <Box className="bg-white dark:bg-black flex-1 items-center justify-center">
                 <Spinner size="large" color={colors.blue[500]} />
             </Box>
         );
@@ -136,14 +141,14 @@ export default function MyListScreen() {
 
     if (error) {
         return (
-            <Box style={styles.loadingContainer}>
-                <Text>Error loading groceries</Text>
+            <Box className="bg-white dark:bg-black flex-1 items-center justify-center">
+                <Text>Error loading groceries. Make sure server is running.</Text>
             </Box>
         );
     }
 
     return (
-        <Box className="bg-white dark:bg-black flex-1" style={styles.container}>
+        <Box className="bg-white dark:bg-black" style={styles.container}>
             <VStack space="md">
                 <HStack space="sm" className="items-center p-4">
                     <Input className="flex-1" variant="outline" size="md">
@@ -165,23 +170,28 @@ export default function MyListScreen() {
                     </Button>
                 </HStack>
 
-                <FlatList
-                    data={items}
-                    renderItem={({ item }) => (
-                        <GroceryItem
-                            item={item}
-                            isFocused={itemFocused?.id === item.id}
-                            onToggle={handleToggleItem}
-                            onFocus={setItemFocused}
-                            onAddAmount={handleAddAmount}
-                            onRemoveAmount={handleRemoveAmount}
-                            onRemove={handleRemoveDialog}
-                        />
-                    )}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={{ gap: 8 }}
-                    className="px-4"
-                />
+                {items?.length === 0 ? (
+                    <Text className="text-center text-typography-500">Add your first item</Text>
+                ) : (
+                    <FlatList
+                        ref={flatListRef}
+                        data={items}
+                        renderItem={({ item }) => (
+                            <GroceryItem
+                                item={item}
+                                isFocused={itemFocused?.id === item.id}
+                                onToggle={handleToggleItem}
+                                onFocus={setItemFocused}
+                                onAddAmount={handleAddAmount}
+                                onRemoveAmount={handleRemoveAmount}
+                                onRemove={handleRemoveDialog}
+                            />
+                        )}
+                        keyExtractor={(item) => item.id}
+                        contentContainerStyle={{ gap: 8 }}
+                        className="px-4"
+                    />
+                )}
             </VStack>
             <AlertDialog
                 isOpen={showDeleteDialog}

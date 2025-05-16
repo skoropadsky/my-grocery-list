@@ -56,4 +56,16 @@ export const groceryApi = {
             throw new Error('Failed to delete grocery');
         }
     },
+
+    clearGroceries: async (): Promise<void> => {
+        const items = await groceryApi.getGroceries();
+
+        await Promise.all(
+            items.map((item) =>
+                fetch(`${API_URL}/groceries/${item.id}`, {
+                    method: 'DELETE',
+                })
+            )
+        );
+    },
 };

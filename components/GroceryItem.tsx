@@ -72,7 +72,7 @@ export function GroceryItem({
                     <Text strikeThrough={item.bought}>{item.title}</Text>
                 </TouchableOpacity>
             </HStack>
-            {isFocused && (
+            {isFocused ? (
                 <HStack className="align-top">
                     <Button
                         size="xs"
@@ -100,6 +100,10 @@ export function GroceryItem({
                     >
                         <ButtonIcon size="md" as={CloseIcon} />
                     </Button>
+                </HStack>
+            ) : (
+                <HStack space="md">
+                    <Text>{item.amount}</Text>
                 </HStack>
             )}
         </HStack>
