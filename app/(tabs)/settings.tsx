@@ -12,40 +12,34 @@ import {
     Text,
     VStack,
 } from '@/components/ui';
-import { groceryApi } from '@/services/api';
+import { useGrocery } from '@/hooks/useGrocery';
 import { useThemeStore } from '@/stores/themeStore';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 
 export default function SettingsScreen() {
     const { themeMode, setTheme } = useThemeStore();
+    const { clearListMutation } = useGrocery();
     const [showClearDialog, setShowClearDialog] = useState(false);
-    const queryClient = useQueryClient();
-
-    const clearListMutation = useMutation({
-        mutationFn: groceryApi.clearGroceries,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['groceries'] });
-            setShowClearDialog(false);
-            router.push('/');
-        },
-        onError: (error) => {
-            console.error('Error clearing list:', error);
-        },
-    });
 
     const handleThemeChange = (value: boolean) => {
         setTheme(value ? 'dark' : 'light');
     };
 
     const handleClearList = () => {
-        clearListMutation.mutate();
+        clearListMutation.mutate(undefined, {
+            onSuccess: () => {
+                setShowClearDialog(false);
+                router.push('/');
+            },
+            onError: (error: Error) => {
+                console.error('Error clearing list:', error);
+            },
+        });
     };
 
     return (
-        <Box className="bg-white dark:bg-black flex-1" style={styles.container}>
+        <Box className="bg-white dark:bg-black flex-1">
             <VStack space="lg" className="p-4">
                 <Text size="2xl">Settings</Text>
                 <HStack space="md" className="items-center justify-between">
@@ -99,9 +93,3 @@ export default function SettingsScreen() {
         </Box>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});

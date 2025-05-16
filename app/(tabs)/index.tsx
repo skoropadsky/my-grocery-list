@@ -15,27 +15,21 @@ import {
     Text,
     VStack,
 } from '@/components/ui';
+import { useGrocery } from '@/hooks/useGrocery';
 import { groceryApi } from '@/services/api';
 import { GroceryItem as GroceryItemType } from '@/types/grocery';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React, { useRef, useState } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import colors from 'tailwindcss/colors';
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingBottom: 134,
-    },
-});
 
 export default function MyListScreen() {
     const [newItem, setNewItem] = useState('');
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<GroceryItemType | null>(null);
-    const queryClient = useQueryClient();
     const [itemFocused, setItemFocused] = useState<GroceryItemType | null>(null);
     const flatListRef = useRef<FlatList>(null);
+    const { addMutation, updateMutation, removeMutation } = useGrocery();
 
     const {
         data: items = [],
@@ -44,29 +38,6 @@ export default function MyListScreen() {
     } = useQuery({
         queryKey: ['groceries'],
         queryFn: groceryApi.getGroceries,
-    });
-
-    const addMutation = useMutation({
-        mutationFn: groceryApi.addGrocery,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['groceries'] });
-            setNewItem('');
-        },
-    });
-
-    const toggleMutation = useMutation({
-        mutationFn: ({ id, updates }: { id: string; updates: Partial<GroceryItemType> }) =>
-            groceryApi.updateGrocery(id, updates),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['groceries'] });
-        },
-    });
-
-    const removeMutation = useMutation({
-        mutationFn: ({ id }: { id: string }) => groceryApi.deleteGrocery(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['groceries'] });
-        },
     });
 
     const handleAddItem = () => {
@@ -79,6 +50,7 @@ export default function MyListScreen() {
                 },
                 {
                     onSuccess: () => {
+                        setNewItem('');
                         setTimeout(() => {
                             flatListRef.current?.scrollToEnd({ animated: true });
                         }, 100);
@@ -89,14 +61,14 @@ export default function MyListScreen() {
     };
 
     const handleToggleItem = (item: GroceryItemType) => {
-        toggleMutation.mutate({
+        updateMutation.mutate({
             id: item.id,
             updates: { bought: !item.bought },
         });
     };
 
     const handleAddAmount = (item: GroceryItemType) => {
-        toggleMutation.mutate({
+        updateMutation.mutate({
             id: item.id,
             updates: { amount: item.amount + 1 },
         });
@@ -104,7 +76,7 @@ export default function MyListScreen() {
 
     const handleRemoveAmount = (item: GroceryItemType) => {
         if (item.amount > 1) {
-            toggleMutation.mutate({
+            updateMutation.mutate({
                 id: item.id,
                 updates: { amount: item.amount - 1 },
             });
@@ -224,3 +196,10 @@ export default function MyListScreen() {
         </Box>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingBottom: 134,
+    },
+});
