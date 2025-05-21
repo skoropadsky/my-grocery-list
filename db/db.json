@@ -25,60 +25,52 @@
       "updatedAt": "2025-05-16T10:37:22.581Z"
     },
     {
-      "id": "4a41",
-      "title": "Banana",
-      "amount": 1,
-      "bought": false,
-      "createdAt": "2025-05-16T10:59:53.730Z",
-      "updatedAt": "2025-05-16T10:59:53.730Z"
-    },
-    {
       "id": "acc0",
       "title": "Milk",
       "amount": 1,
-      "bought": false,
+      "bought": true,
       "createdAt": "2025-05-16T10:59:58.047Z",
-      "updatedAt": "2025-05-16T10:59:58.047Z"
+      "updatedAt": "2025-05-21T12:08:23.168Z"
     },
     {
       "id": "6650",
       "title": "Bread",
       "amount": 1,
-      "bought": false,
+      "bought": true,
       "createdAt": "2025-05-16T11:00:06.512Z",
-      "updatedAt": "2025-05-16T11:00:06.512Z"
+      "updatedAt": "2025-05-21T12:08:21.226Z"
     },
     {
       "id": "faf5",
       "title": "Fish",
       "amount": 1,
-      "bought": false,
+      "bought": true,
       "createdAt": "2025-05-16T11:00:09.373Z",
-      "updatedAt": "2025-05-16T11:00:09.373Z"
+      "updatedAt": "2025-05-21T13:17:11.034Z"
     },
     {
       "id": "d57b",
       "title": "Very long item with many words bla bla bla bla bla bla bla bla bla",
-      "amount": 1,
+      "amount": 3,
       "bought": false,
       "createdAt": "2025-05-16T11:00:29.230Z",
-      "updatedAt": "2025-05-16T11:01:11.341Z"
+      "updatedAt": "2025-05-21T13:20:01.453Z"
     },
     {
-      "id": "4bd6",
-      "title": "Test",
+      "id": "4428",
+      "title": "Sdsd",
       "amount": 1,
-      "bought": false,
-      "createdAt": "2025-05-16T11:01:20.889Z",
-      "updatedAt": "2025-05-16T11:01:20.889Z"
+      "bought": true,
+      "createdAt": "2025-05-21T12:10:52.828Z",
+      "updatedAt": "2025-05-21T13:21:00.402Z"
     },
     {
-      "id": "8a6a",
-      "title": "New itm",
+      "id": "ef76",
+      "title": "Dsfdsf",
       "amount": 1,
       "bought": false,
-      "createdAt": "2025-05-16T11:01:29.597Z",
-      "updatedAt": "2025-05-16T11:01:29.597Z"
+      "createdAt": "2025-05-21T12:10:54.374Z",
+      "updatedAt": "2025-05-21T12:10:54.374Z"
     }
   ]
 }

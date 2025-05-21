@@ -1,10 +1,6 @@
+import { DeleteModal } from '@/components/DeleteModal';
 import { GroceryItem } from '@/components/GroceryItem';
 import {
-    AlertDialog,
-    AlertDialogBackdrop,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
     Box,
     Button,
     ButtonText,
@@ -25,11 +21,11 @@ import colors from 'tailwindcss/colors';
 
 export default function MyListScreen() {
     const [newItem, setNewItem] = useState('');
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
     const [itemToDelete, setItemToDelete] = useState<GroceryItemType | null>(null);
-    const [itemFocused, setItemFocused] = useState<GroceryItemType | null>(null);
     const flatListRef = useRef<FlatList>(null);
-    const { addMutation, updateMutation, removeMutation } = useGrocery();
+    const { addMutation } = useGrocery();
+    const [itemFocused, setItemFocused] = useState<GroceryItemType | null>(null);
 
     const {
         data: items = [],
@@ -60,49 +56,6 @@ export default function MyListScreen() {
         }
     };
 
-    const handleToggleItem = (item: GroceryItemType) => {
-        updateMutation.mutate({
-            id: item.id,
-            updates: { bought: !item.bought },
-        });
-    };
-
-    const handleAddAmount = (item: GroceryItemType) => {
-        updateMutation.mutate({
-            id: item.id,
-            updates: { amount: item.amount + 1 },
-        });
-    };
-
-    const handleRemoveAmount = (item: GroceryItemType) => {
-        if (item.amount > 1) {
-            updateMutation.mutate({
-                id: item.id,
-                updates: { amount: item.amount - 1 },
-            });
-        }
-    };
-
-    const handleRemoveItem = () => {
-        if (itemToDelete) {
-            removeMutation.mutate({
-                id: itemToDelete.id,
-            });
-            setItemToDelete(null);
-            setShowDeleteDialog(false);
-        }
-    };
-
-    const handleRemoveDialog = (item: GroceryItemType | null) => {
-        if (item) {
-            setItemToDelete(item);
-            setShowDeleteDialog(true);
-        } else {
-            setItemToDelete(null);
-            setShowDeleteDialog(false);
-        }
-    };
-
     if (isLoading) {
         return (
             <Box className="bg-white dark:bg-black flex-1 items-center justify-center">
@@ -120,7 +73,7 @@ export default function MyListScreen() {
     }
 
     return (
-        <Box className="bg-white dark:bg-black" style={styles.container}>
+        <Box className="flex-1 bg-white dark:bg-black" style={styles.container}>
             <VStack space="md">
                 <HStack space="sm" className="items-center p-4">
                     <Input className="flex-1" variant="outline" size="md">
@@ -152,11 +105,8 @@ export default function MyListScreen() {
                             <GroceryItem
                                 item={item}
                                 isFocused={itemFocused?.id === item.id}
-                                onToggle={handleToggleItem}
-                                onFocus={setItemFocused}
-                                onAddAmount={handleAddAmount}
-                                onRemoveAmount={handleRemoveAmount}
-                                onRemove={handleRemoveDialog}
+                                setItemFocused={setItemFocused}
+                                setItemToDelete={setItemToDelete}
                             />
                         )}
                         keyExtractor={(item) => item.id}
@@ -165,34 +115,7 @@ export default function MyListScreen() {
                     />
                 )}
             </VStack>
-            <AlertDialog
-                isOpen={showDeleteDialog}
-                onClose={() => handleRemoveDialog(null)}
-                size="md"
-            >
-                <AlertDialogBackdrop />
-                <AlertDialogContent>
-                    <AlertDialogHeader className="mb-6">
-                        <Text className="text-typography-950 font-semibold" size="lg">
-                            Delete &quot;{itemToDelete?.title}&quot; from the list?
-                        </Text>
-                    </AlertDialogHeader>
-
-                    <AlertDialogFooter className="">
-                        <Button
-                            variant="outline"
-                            action="secondary"
-                            onPress={() => handleRemoveDialog(null)}
-                            size="lg"
-                        >
-                            <ButtonText>Cancel</ButtonText>
-                        </Button>
-                        <Button size="lg" onPress={() => handleRemoveItem()}>
-                            <ButtonText>Delete</ButtonText>
-                        </Button>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteModal itemToDelete={itemToDelete} setItemToDelete={setItemToDelete} />
         </Box>
     );
 }

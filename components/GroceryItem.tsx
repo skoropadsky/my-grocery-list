@@ -11,6 +11,7 @@ import {
     RemoveIcon,
     Text,
 } from '@/components/ui';
+import { useGrocery } from '@/hooks/useGrocery';
 import { GroceryItem as GroceryItemType } from '@/types/grocery';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -19,23 +20,49 @@ import { TouchableOpacity } from 'react-native';
 interface GroceryItemProps {
     item: GroceryItemType;
     isFocused: boolean;
-    onToggle: (item: GroceryItemType) => void;
-    onFocus: (item: GroceryItemType) => void;
-    onAddAmount: (item: GroceryItemType) => void;
-    onRemoveAmount: (item: GroceryItemType) => void;
-    onRemove: (item: GroceryItemType) => void;
+    setItemFocused: (item: GroceryItemType) => void;
+    setItemToDelete: (item: GroceryItemType | null) => void;
 }
 
 export function GroceryItem({
     item,
     isFocused,
-    onToggle,
-    onFocus,
-    onAddAmount,
-    onRemoveAmount,
-    onRemove,
+    setItemFocused,
+    setItemToDelete,
 }: GroceryItemProps) {
     const router = useRouter();
+    const { updateMutation } = useGrocery();
+
+    const handleToggleItem = (item: GroceryItemType) => {
+        updateMutation.mutate({
+            id: item.id,
+            updates: { bought: !item.bought },
+        });
+    };
+
+    const handleAddAmount = (item: GroceryItemType) => {
+        updateMutation.mutate({
+            id: item.id,
+            updates: { amount: item.amount + 1 },
+        });
+    };
+
+    const handleRemoveAmount = (item: GroceryItemType) => {
+        if (item.amount > 1) {
+            updateMutation.mutate({
+                id: item.id,
+                updates: { amount: item.amount - 1 },
+            });
+        }
+    };
+
+    const handleRemoveDialog = (item: GroceryItemType | null) => {
+        if (item) {
+            setItemToDelete(item);
+        } else {
+            setItemToDelete(null);
+        }
+    };
 
     return (
         <HStack
@@ -48,7 +75,7 @@ export function GroceryItem({
                 <Checkbox
                     value={item.id}
                     isChecked={item.bought}
-                    onChange={() => onToggle(item)}
+                    onChange={() => handleToggleItem(item)}
                     size="lg"
                 >
                     <CheckboxIndicator>
@@ -67,7 +94,7 @@ export function GroceryItem({
                             },
                         });
                     }}
-                    onPress={() => onFocus(item)}
+                    onPress={() => setItemFocused(item)}
                 >
                     <Text strikeThrough={item.bought}>{item.title}</Text>
                 </TouchableOpacity>
@@ -78,7 +105,7 @@ export function GroceryItem({
                         size="xs"
                         variant="outline"
                         className="rounded-full p-3.5"
-                        onPress={() => onAddAmount(item)}
+                        onPress={() => handleAddAmount(item)}
                     >
                         <ButtonIcon as={AddIcon} />
                     </Button>
@@ -88,7 +115,7 @@ export function GroceryItem({
                         variant="outline"
                         className="rounded-full p-3.5"
                         isDisabled={item.amount <= 1}
-                        onPress={() => onRemoveAmount(item)}
+                        onPress={() => handleRemoveAmount(item)}
                     >
                         <ButtonIcon as={RemoveIcon} />
                     </Button>
@@ -96,7 +123,7 @@ export function GroceryItem({
                         size="xs"
                         variant="link"
                         className="rounded-full px-3 ml-2"
-                        onPress={() => onRemove(item)}
+                        onPress={() => handleRemoveDialog(item)}
                     >
                         <ButtonIcon size="md" as={CloseIcon} />
                     </Button>
